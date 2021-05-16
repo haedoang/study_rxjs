@@ -63,7 +63,7 @@ case1.subscribe(x=>console.log(x));
 console.log('===========================================================');
 
 //Observable 
-//1. Creatation Observable
+//1. Creatation Operators
 
 //1) ajax - 주어진 url에 대해 ajax 요청을 한다.
 import { ajax } from 'rxjs/ajax';
@@ -130,7 +130,7 @@ let ints2 = range(1,10);
 ints2.subscribe(x=>console.log(x));
 
 //8) throwError(error: any) : Observable - error Observable을 생성함.
-import { throwError, concat } from 'rxjs';
+import { throwError } from 'rxjs';
 const result = throwError(new Error('error occurred'));
 result.subscribe(x=>console.log(`success :${x}`), e=> console.error(e));
 console.log('===========================================================');
@@ -151,4 +151,94 @@ let task1 = iif(
 );
 
 task1.subscribe(x=>console.log(x));
+console.log('===========================================================');
+
+
+//2. Mathematical Operators
+//1) Count - 관찰 가능한 Observable의 주어진 숫자의 개ㅔ수를 반환한다.
+import { count } from 'rxjs/operators';
+
+let all_nums = of(1,7,5,10,10,20);
+let final_val = all_nums.pipe(count());
+final_val.subscribe(x=>console.log(`the number count is ${x}`));
+
+final_val = all_nums.pipe(count(a => a %2 ===0));
+final_val.subscribe(x=>console.log(`the even number count is ${x}`));
+console.log('===========================================================');
+
+//2) Max(Comparer_func), Min  
+
+import { max, min} from 'rxjs/operators';
+let numbers = of(1,2,3,4,5,6,7,8,9,10);
+let max_val = numbers.pipe(max());
+let min_val = numbers.pipe(min());
+
+max_val.subscribe(x=>console.log(`the max number is ${x}`));
+min_val.subscribe(x=>console.log(`the min number is ${x}`));
+ 
+let list = [1,3,55,7,9,11];
+let fin_val = from(list).pipe(max());
+fin_val.subscribe(x=>console.log(x));
+console.log('===========================================================');
+
+//3) reduce((acc, current) => acc+ current, acc초기값) : 누산기 
+let items = [
+    {item1 : 'A', price : 1000.00},
+    {item2 : 'B', price : 850.00},
+    {item3 : 'C', price : 200.00},
+    {item2 : 'D', price : 150.00},
+];
+
+let items_val = from(items).pipe(reduce((acc, itemsdet)=> acc +itemsdet.price,0));
+items_val.subscribe(x=>console.log(`items total value : ${x}`))
+console.log('===========================================================');
+
+//3. Join Operators 
+//1) concat - 두개의 Observable을 하나로 합침 deprecate 됨 
+import { concat } from 'rxjs/operators';
+
+let list1 = of(2,3,4,5,6);
+let list2 = of(4,9,16,25,36);
+let result_concat = list1.pipe(concat(list2));
+result_concat.subscribe(x=>console.log(`concat result : ${x}`));
+console.log('===========================================================');
+
+//2) forkJoin - Observable에서 마지막으로 방ㅊ풀된 값과 함께 반환한다. 
+import { forkJoin } from 'rxjs';
+
+let result_forkJoin = forkJoin([list1, list2]);
+result_forkJoin.subscribe(x=>console.log(`forkJoin result : ${x}`));
+console.log('===========================================================');
+
+//3) merge(Observable: array[]) - Observable을 입력받고 Observable에서 모든 값을 방출하고 하나의 Observable을 출력한다.
+import { merge } from 'rxjs';
+let result_merge = merge(list1, list2);
+result_merge.subscribe(x=>console.log(`merge result : ${x}`));
+console.log('===========================================================');
+
+//4) race(Observable: array[]) - 첫번째 파라미터의 Observable의 미러 복사본을 반환한다.
+import { race } from 'rxjs';
+let result_race = race(list1, list2);
+result_race.subscribe(x=>console.log(`race result : ${x}`)); 
+console.log('===========================================================');
+
+//3. Transformation Operators 
+//1) buffer(input_observable: Observable) : Observable 
+// input_observable : 버퍼가 값을 방출하도록 만드는 Observable (ex) 버튼 클릭) 
+// 관찰가능한 Observable이 방출할 때 동일한 값을 방출한다. 방출한 후 다시 원본을 버퍼링한다. (약간 어려움 이해하기.. ㅎㅎ)
+// => 버퍼의 input_observable인 이벤트 Observable이 호출되는 경우 buffer는 관찰중인 Observable을 이 방출하는 값을 방출한다
+let btn = document.getElementById("btnclick");
+
+let btn_clicks = fromEvent(btn, 'click');
+let interval_events = interval(1000);
+let buffered_array = interval_events.pipe(buffer(btn_clicks));
+buffered_array.subscribe(arr => console.log(arr));
+console.log('===========================================================');
+
+//2) bufferCount(bufferSize: number, startBufferEvery: number = null): Observable 
+
+console.log('===========================================================');
+console.log('===========================================================');
+console.log('===========================================================');
+console.log('===========================================================');
 console.log('===========================================================');
