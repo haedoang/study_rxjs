@@ -42,3 +42,8 @@
   -. Multicasting
   -. Error Handling
 
+
+
+
+
+참조 : https://www.tutorialspoint.com/rxjs/rxjs_create_operator_interval.htm
