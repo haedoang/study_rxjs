@@ -36,7 +36,7 @@
   -. Mathmatical
   -. Join
   -. Transformation
-  -. Filtering
+  -. Filtering 
   -. Utility
   -. Conditional
   -. Multicasting
